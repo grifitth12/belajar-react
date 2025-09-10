@@ -1,22 +1,7 @@
-import { useState } from "react";
-
-type Employee = {
-    id:number;
-    name:string;
-};
+import { useFetchEmployees } from "../services/useFetchEmployees";
 
 const EmployeesPage = () => {
-    const [employees, setEmployees] = useState<Employee[]>([]);
-
-    const fetchEmployees = async () => {
-        const request = await fetch("http://localhost:2000/employees", {
-            method: "GET"
-        });
-
-        const responseJson = (await request.json()) as Employee[];//! array of object
-
-        setEmployees(responseJson);
-    }
+    const{fetchEmployees, isLoading, data, errorMessege} = useFetchEmployees()
     return (
         <div>
             <h1>Employees pages</h1>
@@ -29,7 +14,7 @@ const EmployeesPage = () => {
                 </thead>
                 <tbody>
                    {
-                    employees.map(employee =>{
+                    data.map((employee) =>{
                         return (
                             <tr>
                                 <td>{employee.id}</td>
@@ -42,9 +27,17 @@ const EmployeesPage = () => {
                 </tbody>
             </table>
             
-            <button onClick={fetchEmployees}>
+            <button disabled={isLoading} onClick={fetchEmployees}>
                 Fetch Employees
             </button>
+
+            {
+                isLoading && <p>Loading ...</p>
+            }
+
+            {
+                errorMessege && <p style={{color: "red"}}>{errorMessege}</p>
+            }
 
         </div>
     )

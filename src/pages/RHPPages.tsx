@@ -30,7 +30,6 @@
 
     const form = useForm({
     resolver: zodResolver(registerFormSchema),
-    mode: "onChange",
     });
 
         const handleRegisterUser = (values : RegisterFormSchema) => {
