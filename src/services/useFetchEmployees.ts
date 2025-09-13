@@ -1,7 +1,8 @@
 import { useState } from "react";
+import { axiosInstance } from "../lib/axios";
 
 type EmployeeResponse = {
-    id:number;
+    id:string;
     name:string;
 };
 
@@ -13,12 +14,14 @@ export const useFetchEmployees = () => {
         const fetchEmployees = async () => {
             try {
                 setEmployeeIsLoading(true) //? toogle mode loading on
-                const response = await fetch("http://localhost:2000/employees", {
-                method: "GET"
-            });
-    
-            const responseJson = (await response.json()) as EmployeeResponse[];//! array of object
-            setEmployees(responseJson);
+            //     const response = await fetch("http://localhost:2000/employees", {
+            //     method: "GET"
+            // });
+            // const responseJson = (await response.json()) as EmployeeResponse[];//! array of object
+
+            const response = await axiosInstance.get<EmployeeResponse[]>("/employees");
+            
+            setEmployees(response.data);
             } catch (error) {
                 setEmployeesError((error as TypeError).message)
                 // setEmployeesError("Gagal medapatkan data ")
